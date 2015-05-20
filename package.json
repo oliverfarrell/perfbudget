@@ -23,7 +23,7 @@
   "homepage": "https://github.com/oliverfarrell/perfbudget",
   "bugs": "https://github.com/oliverfarrell/perfbudget/issues",
   "author": "Oliver Farrell",
-  "repository": "https://github.com/perfbudget/perfbudget",
+  "repository": "https://github.com/oliverfarrell/perfbudget",
   "preferGlobal": true,
   "license": "MIT"
 }
