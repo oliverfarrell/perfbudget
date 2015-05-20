@@ -1,7 +1,16 @@
+/*
+ * node-perfbudget
+ * https://github.com/
+ *
+ * Copyright (c) 2015 Oliver Farrell
+ * Licensed under the MIT license.
+ */
+
 'use strict';
 
+// setup some useful defaults
 var options = {
-  url: 'http://www.bbc.co.uk',
+  url: 'http://www.google.co.uk',
   key: 'a102fb2a641b4ee182d7ffa2123222a1',
   location: "Manchester:Chrome",
   wptInstance: "www.webpagetest.org",
@@ -30,27 +39,74 @@ var options = {
     requestsDoc: '',
     SpeedIndex: '1000'
   }
-};
+}
+
+// override the defaults with some flags
+if(process.argv.indexOf('--visualComplete') != -1) {
+  options.budget.visualComplete = process.argv[process.argv.indexOf("--visualComplete") + 1];
+}
+
+if(process.argv.indexOf('--render') != -1) {
+  options.budget.render = process.argv[process.argv.indexOf("--render") + 1];
+}
+
+if(process.argv.indexOf('--loadTime') != -1) {
+  options.budget.visualComplete = process.argv[process.argv.indexOf("--loadTime") + 1];
+}
+
+if(process.argv.indexOf('--docTime') != -1) {
+  options.budget.visualComplete = process.argv[process.argv.indexOf("--docTime") + 1];
+}
+
+if(process.argv.indexOf('--fullyLoaded') != -1) {
+  options.budget.visualComplete = process.argv[process.argv.indexOf("--fullyLoaded") + 1];
+}
+
+if(process.argv.indexOf('--bytesIn') != -1) {
+  options.budget.visualComplete = process.argv[process.argv.indexOf("--bytesIn") + 1];
+}
+
+if(process.argv.indexOf('--bytesIn') != -1) {
+  options.budget.visualComplete = process.argv[process.argv.indexOf("--fullyLoaded") + 1];
+}
+
+if(process.argv.indexOf('--bytesInDoc') != -1) {
+  options.budget.visualComplete = process.argv[process.argv.indexOf("--bytesInDoc") + 1];
+}
+
+if(process.argv.indexOf('--requests') != -1) {
+  options.budget.visualComplete = process.argv[process.argv.indexOf("--requests") + 1];
+}
+
+if(process.argv.indexOf('--requestsDoc') != -1) {
+  options.budget.visualComplete = process.argv[process.argv.indexOf("--requestsDoc") + 1];
+}
+
+if(process.argv.indexOf('--SpeedIndex') != -1) {
+  options.budget.visualComplete = process.argv[process.argv.indexOf("--SpeedIndex") + 1];
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 var testId,
     curStatus,
     myTimer;
 
-var fs = require('fs');
-
 // takes the data returned by wpt.getTestResults and compares
 // to our budget thresholds
 var processData = function(data) {
-
-  console.log(data.id);
-
-  fs.writeFile("results.json", JSON.stringify(data, null, 2), function(err) {
-    if(err) {
-      return console.log(err);
-    }
-
-    console.log("The file was saved!");
-  }); 
 
   var budget = options.budget,
       summary = data.summary,
@@ -65,9 +121,11 @@ var processData = function(data) {
       if (budget[item] !== '' && median.hasOwnProperty(item)) {
         if (median[item] > budget[item]) {
           pass = false;
-          str += item + ': ' + median[item] + ' [FAIL]. Budget is ' + budget[item] + '\n';
+          str += item + ': ' + median[item] + ' [FAIL]'.red + '\n';
+          str += 'Budget is ' + budget[item] + '\n\n';
         } else {
-          str += item + ': ' + median[item] + ' [PASS]. Budget is ' + budget[item] + '\n';
+          str += item + ': ' + median[item] + ' [PASS]'.green + '\n';
+          str += 'Budget is ' + budget[item] + '\n\n';
         }
       }
     }
@@ -78,33 +136,32 @@ var processData = function(data) {
   if (typeof output !== 'undefined') {
     console.log('Writing file: ' + output);
     console.log(output, JSON.stringify(data));
-    // grunt.log.ok('Writing file: ' + output);
-    // grunt.file.write(output, JSON.stringify(data));
   }
 
   //output our header and results
   if (!pass) {
-    // grunt.log.error('\n\n-----------------------------------------------' +
-    //       '\nTest for ' + options.url + ' \t  FAILED' +
-    //     '\n-----------------------------------------------\n\n');
-    // grunt.log.error(str);
-    // grunt.log.error('Summary: ' + summary);
-    // done(false);
+    console.log(
+      '\n-----------------------------------------------' +
+      '\nTest for ' + options.url + ' \t  FAILED'.red +
+      '\n-----------------------------------------------\n'
+    );
+    console.log(str);
+    console.log('Summary: ' + summary);
   } else {
-    // grunt.log.ok('\n\n-----------------------------------------------' +
-    //       '\nTest for ' + options.url + ' \t  PASSED' +
-    //     '\n-----------------------------------------------\n\n');
-    // grunt.log.ok(str);
-    // grunt.log.ok('Summary: ' + summary);
-    // done();
+    console.log(
+      '\n-----------------------------------------------' +
+      '\nTest for ' + options.url + ' \t  PASSED'.green +
+      '\n-----------------------------------------------\n'
+    );
+    console.log(str);
+    console.log('Summary: ' + summary);
   }
 };
 
 var retrieveResults = function(response) {
   if (response.statusCode === 200) {
     //yay! Let's process it now
-    console.log('response: ' + response.id);
-    processData(response);
+    processData(response.data);
   } else {
     if (response.statusCode !== curStatus) {
       //we had a problem
@@ -143,7 +200,6 @@ var WebPageTest = require('webpagetest'),
 
     // run the test
     wpt.runTest(options.url, toSend, function(err, data) {
-      console.log('error: ' + err);
       if (err) {
         // ruh roh!
         var status;
