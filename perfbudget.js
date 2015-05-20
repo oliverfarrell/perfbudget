@@ -43,7 +43,9 @@ var options = {
     requestsDoc: '',
     SpeedIndex: '1000'
   }
-}
+};
+
+console.log(process.argv[1]);
 
 // override the defaults with some flags
 if(process.argv.indexOf('--url') != -1) {
@@ -101,20 +103,6 @@ if(process.argv.indexOf('--requestsDoc') != -1) {
 if(process.argv.indexOf('--SpeedIndex') != -1) {
   options.budget.visualComplete = process.argv[process.argv.indexOf("--SpeedIndex") + 1];
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 var testId,
     curStatus,
