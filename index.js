@@ -1,3 +1,5 @@
+#! /usr/bin/env node
+
 /*
  * node-perfbudget
  * https://github.com/
@@ -8,10 +10,12 @@
 
 'use strict';
 
+var colors = require('colors');
+
 // setup some useful defaults
 var options = {
   url: 'http://www.google.co.uk',
-  key: 'a102fb2a641b4ee182d7ffa2123222a1',
+  key: '',
   location: "Manchester:Chrome",
   wptInstance: "www.webpagetest.org",
   connectivity: '',
@@ -42,6 +46,18 @@ var options = {
 }
 
 // override the defaults with some flags
+if(process.argv.indexOf('--url') != -1) {
+  options.url = process.argv[process.argv.indexOf("--url") + 1];
+}
+
+if(process.argv.indexOf('--key') != -1) {
+  options.key = process.argv[process.argv.indexOf("--key") + 1];
+}
+
+if(process.argv.indexOf('--location') != -1) {
+  options.location = process.argv[process.argv.indexOf("--location") + 1];
+}
+
 if(process.argv.indexOf('--visualComplete') != -1) {
   options.budget.visualComplete = process.argv[process.argv.indexOf("--visualComplete") + 1];
 }
@@ -121,10 +137,10 @@ var processData = function(data) {
       if (budget[item] !== '' && median.hasOwnProperty(item)) {
         if (median[item] > budget[item]) {
           pass = false;
-          str += item + ': ' + median[item] + ' [FAIL]'.red + '\n';
+          str += item + ': ' + median[item] + ' ' + colors.red('[FAIL]') + '\n';
           str += 'Budget is ' + budget[item] + '\n\n';
         } else {
-          str += item + ': ' + median[item] + ' [PASS]'.green + '\n';
+          str += item + ': ' + median[item] + ' ' + colors.green('[PASS]') + '\n';
           str += 'Budget is ' + budget[item] + '\n\n';
         }
       }
@@ -142,7 +158,7 @@ var processData = function(data) {
   if (!pass) {
     console.log(
       '\n-----------------------------------------------' +
-      '\nTest for ' + options.url + ' \t  FAILED'.red +
+      '\nTest for ' + options.url + ' \t ' + colors.red('[FAILED]') +
       '\n-----------------------------------------------\n'
     );
     console.log(str);
@@ -150,7 +166,7 @@ var processData = function(data) {
   } else {
     console.log(
       '\n-----------------------------------------------' +
-      '\nTest for ' + options.url + ' \t  PASSED'.green +
+      '\nTest for ' + options.url + ' \t ' + colors.green('PASSED') +
       '\n-----------------------------------------------\n'
     );
     console.log(str);
@@ -165,7 +181,6 @@ var retrieveResults = function(response) {
   } else {
     if (response.statusCode !== curStatus) {
       //we had a problem
-      // grunt.log.error( (response.statusText) );
       console.log(response.statusText);
     }
   }
@@ -175,7 +190,6 @@ var WebPageTest = require('webpagetest'),
     wpt = new WebPageTest(options.wptInstance, options.key),
     reserved = ['key', 'url', 'budget', 'wptInstance'],
     err, data, toSend = {};
-
 
     for (var item in options) {
       if (reserved.indexOf(item) === -1 && options[item] !== '') {
@@ -194,7 +208,6 @@ var WebPageTest = require('webpagetest'),
     if (Object.keys(options.budget).length === 0) {
       //empty budget defined, so error
       console.log('Empty budget option provided');
-      // grunt.log.error('Empty budget option provided');
       // done(false);
     }
 
@@ -224,7 +237,6 @@ var WebPageTest = require('webpagetest'),
         testId = data.id;
 
         if (data.successfulFVRuns <= 0) {
-          // grunt.log.error( ('Test ' + testId + ' was unable to complete. Please see ' + data.response.data.summary + ' for more details.').cyan );
           console.log('Test ' + testId + ' was unable to complete. Please see ' + data.summary + ' for more details.');
         } else {
           // yay! now try to get the actual results
@@ -233,7 +245,6 @@ var WebPageTest = require('webpagetest'),
 
       } else {
         // ruh roh! Something is off here.
-        // grunt.log.error(data.response.data.statusText);
         console.log(data.statusText);
       }
     });
