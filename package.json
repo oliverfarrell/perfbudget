@@ -1,6 +1,6 @@
 {
   "name": "perfbudget",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "A stand-alone version of Tim Kadlec's (@tkadlec) grunt-perfbudget plugin",
   "main": "index.js",
   "scripts": {
@@ -11,8 +11,7 @@
     "colors": "^1.1.0",
     "webpagetest": "~0.3.3"
   },
-  "main": "index.js",
   "bin": {
-    "perfbudget" : "index.js"
+    "perfbudget": "index.js"
   }
 }
