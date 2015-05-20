@@ -3,7 +3,7 @@
 var options = {
   url: 'http://www.bbc.co.uk',
   key: 'a102fb2a641b4ee182d7ffa2123222a1',
-  location: "Dulles:Chrome",
+  location: "Manchester:Chrome",
   wptInstance: "www.webpagetest.org",
   connectivity: '',
   bandwidthDown: '',
@@ -103,6 +103,7 @@ var processData = function(data) {
 var retrieveResults = function(response) {
   if (response.statusCode === 200) {
     //yay! Let's process it now
+    console.log('response: ' + response.id);
     processData(response);
   } else {
     if (response.statusCode !== curStatus) {
