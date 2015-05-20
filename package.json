@@ -1,0 +1,13 @@
+{
+  "name": "perfbudget",
+  "version": "0.0.1",
+  "description": "A stand-alone version of Tim Kadlec's (@tkadlec) grunt-perfbudget plugin",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Oliver Farrell",
+  "dependencies": {
+    "webpagetest": "~0.3.3"
+  }
+}
