@@ -45,8 +45,6 @@ var options = {
   }
 };
 
-console.log(process.argv[1]);
-
 // override the defaults with some flags
 if(process.argv.indexOf('--url') != -1) {
   options.url = process.argv[process.argv.indexOf("--url") + 1];
