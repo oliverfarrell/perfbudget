@@ -27,3 +27,8 @@ perfbudget --url http://www.bbc.co.uk --key [api_key]
 - --requests
 - --requestsDoc
 - --SpeedIndex
+
+## TODO
+
+- Remove the need for a `--url` flag. Instead just assume that whatever follows `perfbudget` is the URL.
+- Better Node.js intergration
