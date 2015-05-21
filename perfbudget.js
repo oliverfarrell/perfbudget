@@ -63,7 +63,10 @@ if(argv.key) options.key = argv.key;
 if(argv.location) options.location = argv.location;
 
 // visual complete
-if(argv.visualComplete) options.budget.render = argv.visualComplete;
+if(argv.visualComplete) options.budget.visualComplete = argv.visualComplete;
+
+// render
+if(argv.render) options.budget.render = argv.render;
 
 // load time
 if(argv.loadTime) options.budget.loadTime = argv.loadTime;
