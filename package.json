@@ -9,11 +9,11 @@
   "main": "perfbudget.js",
   "dependencies": {
     "colors": "^1.1.0",
-    "webpagetest": "~0.3.3"
+    "webpagetest": "~0.3.3",
+    "minimist": "^1.1.1"
   },
   "devDependencies": {
-    "jshint": "^2.7.0",
-    "minimist": "^1.1.1"
+    "jshint": "^2.7.0"
   },
   "scripts": {
     "js": "jshint ./perfbudget.js"
