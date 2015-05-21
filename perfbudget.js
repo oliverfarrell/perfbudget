@@ -1,22 +1,26 @@
 #! /usr/bin/env node
 
 /*
- * node-perfbudget
- * https://github.com/
+ * perfbudget
+ * https://github.com/oliverfarrell/perfbudget
  *
- * Copyright (c) 2015 Oliver Farrell
  * Licensed under the MIT license.
  */
 
 'use strict';
 
-var colors = require('colors');
+/**
+ * Module dependencies
+ */
+var colors = require('colors'),
+    argv = require('minimist')(process.argv.slice(2)),
+    testId, curStatus;
 
 // setup some useful defaults
 var options = {
-  url: 'http://www.google.co.uk',
+  url: '',
   key: '',
-  location: "Manchester:Chrome",
+  location: "Dulles:Chrome",
   wptInstance: "www.webpagetest.org",
   connectivity: '',
   bandwidthDown: '',
@@ -45,69 +49,50 @@ var options = {
   }
 };
 
-// override the defaults with some flags
-if(process.argv.indexOf('--url') != -1) {
-  options.url = process.argv[process.argv.indexOf("--url") + 1];
-}
+/**
+ * Override the defaults
+ */
 
-if(process.argv.indexOf('--key') != -1) {
-  options.key = process.argv[process.argv.indexOf("--key") + 1];
-}
+// url
+if(argv.url) options.url = argv.url;
 
-if(process.argv.indexOf('--location') != -1) {
-  options.location = process.argv[process.argv.indexOf("--location") + 1];
-}
+// api key
+if(argv.key) options.key = argv.key;
 
-if(process.argv.indexOf('--visualComplete') != -1) {
-  options.budget.visualComplete = process.argv[process.argv.indexOf("--visualComplete") + 1];
-}
+// location
+if(argv.location) options.location = argv.location;
 
-if(process.argv.indexOf('--render') != -1) {
-  options.budget.render = process.argv[process.argv.indexOf("--render") + 1];
-}
+// visual complete
+if(argv.visualComplete) options.budget.render = argv.visualComplete;
 
-if(process.argv.indexOf('--loadTime') != -1) {
-  options.budget.visualComplete = process.argv[process.argv.indexOf("--loadTime") + 1];
-}
+// load time
+if(argv.loadTime) options.budget.loadTime = argv.loadTime;
 
-if(process.argv.indexOf('--docTime') != -1) {
-  options.budget.visualComplete = process.argv[process.argv.indexOf("--docTime") + 1];
-}
+// doc time
+if(argv.docTime) options.budget.docTime = argv.docTime;
 
-if(process.argv.indexOf('--fullyLoaded') != -1) {
-  options.budget.visualComplete = process.argv[process.argv.indexOf("--fullyLoaded") + 1];
-}
+// full loaded
+if(argv.fullyLoaded) options.budget.fullyLoaded = argv.fullyLoaded;
 
-if(process.argv.indexOf('--bytesIn') != -1) {
-  options.budget.visualComplete = process.argv[process.argv.indexOf("--bytesIn") + 1];
-}
+// bytes in
+if(argv.bytesIn) options.budget.bytesIn = argv.bytesIn;
 
-if(process.argv.indexOf('--bytesIn') != -1) {
-  options.budget.visualComplete = process.argv[process.argv.indexOf("--fullyLoaded") + 1];
-}
+// bytes in doc
+if(argv.bytesInDoc) options.budget.bytesInDoc = argv.bytesInDoc;
 
-if(process.argv.indexOf('--bytesInDoc') != -1) {
-  options.budget.visualComplete = process.argv[process.argv.indexOf("--bytesInDoc") + 1];
-}
+// requests
+if(argv.requests) options.budget.requests = argv.requests;
 
-if(process.argv.indexOf('--requests') != -1) {
-  options.budget.visualComplete = process.argv[process.argv.indexOf("--requests") + 1];
-}
+// requests doc
+if(argv.requestsDoc) options.budget.requestsDoc = argv.requestsDoc;
 
-if(process.argv.indexOf('--requestsDoc') != -1) {
-  options.budget.visualComplete = process.argv[process.argv.indexOf("--requestsDoc") + 1];
-}
+// speed index
+if(argv.SpeedIndex) options.budget.SpeedIndex = argv.SpeedIndex;
 
-if(process.argv.indexOf('--SpeedIndex') != -1) {
-  options.budget.visualComplete = process.argv[process.argv.indexOf("--SpeedIndex") + 1];
-}
-
-var testId,
-    curStatus,
-    myTimer;
-
-// takes the data returned by wpt.getTestResults and compares
-// to our budget thresholds
+/**
+ * Takes the data returned by wpt.getTestResults and compares
+ * to our budget thresholds
+ */
 var processData = function(data) {
 
   var budget = options.budget,
@@ -119,7 +104,7 @@ var processData = function(data) {
   for (var item in budget) {
     // make sure this is objects own property and not inherited
     if (budget.hasOwnProperty(item)) {
-      //make sure it exists
+      // make sure it exists
       if (budget[item] !== '' && median.hasOwnProperty(item)) {
         if (median[item] > budget[item]) {
           pass = false;
@@ -133,14 +118,14 @@ var processData = function(data) {
     }
   }
 
-  //save the file before failing or passing
+  // save the file before failing or passing
   var output = options.output;
   if (typeof output !== 'undefined') {
     console.log('Writing file: ' + output);
     console.log(output, JSON.stringify(data));
   }
 
-  //output our header and results
+  // output our header and results
   if (!pass) {
     console.log(
       '\n-----------------------------------------------' +
@@ -162,12 +147,12 @@ var processData = function(data) {
 
 var retrieveResults = function(response) {
   if (response.statusCode === 200) {
-    //yay! Let's process it now
+    // yay! Let's process it now
     processData(response.data);
   } else {
     if (response.statusCode !== curStatus) {
-      //we had a problem
-      console.log(response.statusText);
+      // we had a problem
+      console.log(colors.red(response.statusText));
     }
   }
 };
@@ -177,60 +162,59 @@ var WebPageTest = require('webpagetest'),
     reserved = ['key', 'url', 'budget', 'wptInstance'],
     err, data, toSend = {};
 
-    for (var item in options) {
-      if (reserved.indexOf(item) === -1 && options[item] !== '') {
-        toSend[item] = options[item];
-      }
-    }
+for (var item in options) {
+  if (reserved.indexOf(item) === -1 && options[item] !== '') {
+    toSend[item] = options[item];
+  }
+}
 
-    if (options.repeatView) {
-      //if repeatView, we need to get repeat
-      toSend['firstViewOnly'] = false;
-    } else {
-      //otherwise, don't
-      toSend['firstViewOnly'] = true;
-    }
+if (options.repeatView) {
+  // if repeatView, we need to get repeat
+  toSend['firstViewOnly'] = false;
+} else {
+  // otherwise, don't
+  toSend['firstViewOnly'] = true;
+}
 
-    if (Object.keys(options.budget).length === 0) {
-      //empty budget defined, so error
-      console.log('Empty budget option provided');
-      // done(false);
-    }
+if (Object.keys(options.budget).length === 0) {
+  // empty budget defined, so error
+  console.log('Empty budget option provided');
+}
 
-    // run the test
-    wpt.runTest(options.url, toSend, function(err, data) {
-      if (err) {
-        // ruh roh!
-        var status;
-        if (err.error) {
-          //underlying API throws errors inconsistently
-          //so we need to do this check
+// run the test
+wpt.runTest(options.url, toSend, function(err, data) {
+  if (err) {
+    // ruh roh!
+    var status;
+    if (err.error) {
+      // underlying API throws errors inconsistently
+      // so we need to do this check
 
-          //custom for timeout because that could be common
-          if (err.error.code === 'TIMEOUT') {
-            status = 'Test ' + err.error.testId + ' has timed out. You can still view the results online at ' +
-                    options.wptInstance + '/results.php?test=' + err.error.testId + '.';
-          } else {
-            //we'll keep this just in case
-            status = 'Test ' + err.error.testId + ' has errored. Error code: ' + err.error.code + '.';
-          }
-        } else {
-          status = err.statusText || (err.code + ' ' + err.message);
-        }
-
-        console.log(status);
-      } else if (data.statusCode === 200) {
-        testId = data.id;
-
-        if (data.successfulFVRuns <= 0) {
-          console.log('Test ' + testId + ' was unable to complete. Please see ' + data.summary + ' for more details.');
-        } else {
-          // yay! now try to get the actual results
-          retrieveResults(data);
-        }
-
+      // custom for timeout because that could be common
+      if (err.error.code === 'TIMEOUT') {
+        status = colors.red('Test ' + err.error.testId + ' has timed out. You can still view the results online at ' +
+                options.wptInstance + '/results.php?test=' + err.error.testId + '.');
       } else {
-        // ruh roh! Something is off here.
-        console.log(data.statusText);
+        // we'll keep this just in case
+        status = 'Test ' + err.error.testId + ' has errored. Error code: ' + err.error.code + '.';
       }
-    });
+    } else {
+      status = err.statusText || (err.code + ' ' + err.message);
+    }
+
+    console.log(status);
+  } else if (data.statusCode === 200) {
+    testId = data.id;
+
+    if (data.successfulFVRuns <= 0) {
+      console.log('Test ' + testId + ' was unable to complete. Please see ' + data.summary + ' for more details.');
+    } else {
+      // yay! now try to get the actual results
+      retrieveResults(data);
+    }
+
+  } else {
+    // ruh roh! Something is off here.
+    console.log(data.statusText);
+  }
+});
