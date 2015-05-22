@@ -7,10 +7,14 @@
     "webpagetest"
   ],
   "main": "perfbudget.js",
+  "bin": {
+    "perfbudget": "cli.js"
+  },
   "dependencies": {
     "colors": "^1.1.0",
-    "webpagetest": "~0.3.3",
-    "minimist": "^1.1.1"
+    "lodash": "^3.9.1",
+    "minimist": "^1.1.1",
+    "webpagetest": "~0.3.3"
   },
   "devDependencies": {
     "jshint": "^2.7.0"
@@ -18,13 +22,9 @@
   "scripts": {
     "js": "jshint ./perfbudget.js"
   },
-  "bin": {
-    "perfbudget": "./perfbudget.js"
-  },
   "homepage": "https://github.com/oliverfarrell/perfbudget",
   "bugs": "https://github.com/oliverfarrell/perfbudget/issues",
   "author": "Oliver Farrell",
   "repository": "https://github.com/oliverfarrell/perfbudget",
-  "preferGlobal": true,
   "license": "MIT"
 }
