@@ -56,6 +56,9 @@ var options = {
 // url
 if(argv.url) options.url = argv.url;
 
+// wpt instance
+if(argv.instance) options.wptInstance = argv.instance;
+
 // api key
 if(argv.key) options.key = argv.key;
 
