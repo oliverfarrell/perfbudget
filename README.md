@@ -1,5 +1,7 @@
 # perfbudget
 
+[![Build Status](https://travis-ci.org/oliverfarrell/perfbudget.svg?branch=master)](https://travis-ci.org/oliverfarrell/perfbudget)
+
 A stand-alone version of Tim Kadlec's ([@tkadlec](http://twitter.com/tkadlec)) [grunt-perfbudget](https://github.com/tkadlec/grunt-perfbudget) plugin.
 
 **Note:** This is still a work in progress and things are likely to change with each release. As it stands this package works directly in CLI. I'll be working to make it easier to integrate with a Node project.
