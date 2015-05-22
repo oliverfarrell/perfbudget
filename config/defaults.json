@@ -1,0 +1,31 @@
+{
+  "url": "",
+  "key": "",
+  "location": "Dulles:Chrome",
+  "wptInstance": "www.webpagetest.org",
+  "connectivity": "",
+  "bandwidthDown": "",
+  "bandwidthUp": "",
+  "latency": "",
+  "packetLossRate": "",
+  "login": "",
+  "password": "",
+  "authenticationType": "",
+  "video": 1,
+  "runs": 1,
+  "pollResults": 5,
+  "timeout": 60,
+  "repeatView": false,
+  "budget": {
+    "visualComplete": "",
+    "render": "1000",
+    "loadTime": "",
+    "docTime": "",
+    "fullyLoaded": "",
+    "bytesIn": "",
+    "bytesInDoc": "",
+    "requests": "",
+    "requestsDoc": "",
+    "SpeedIndex": "1000"
+  }
+}

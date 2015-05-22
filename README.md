@@ -8,27 +8,80 @@ A stand-alone version of Tim Kadlec's ([@tkadlec](http://twitter.com/tkadlec)) [
 
 ## Installation
 ```
-npm install -g perfbudget
+# cli usage
+$ npm install -g perfbudget
+
+# node module usage
+$ npm install perfbudget
 ```
 
 ## Usage
 
+### CLI
+
 ```
-perfbudget --url http://www.bbc.co.uk --key [api_key]
+# using www.webpagetest.org
+$ perfbudget --url http://www.bbc.co.uk --key [api_key]
+
+# using private instance
+$ perfbudget --url http://www.bbc.co.uk --instance [instance_url] --key [api_key] --location [location]
+
+# setting budgets
+$ perfbudget --url http://www.bbc.co.uk --key [api_key] --SpeedIndex 2000 --render 400
 ```
 
 **Flags**
 
-- --visualComplete
-- --render
-- --loadTime
-- --docTime
-- --fullyLoaded
-- --bytesIn
-- --bytesInDoc
-- --requests
-- --requestsDoc
-- --SpeedIndex
+Config:
+
+- `--url` - URL you want WPT to run against | default : `""`
+- `--key` - API key for WPT instance | default : `""`
+- `--instance` - WPT instance to use | default : `www.webpagetest.org`
+- `--location` - WPT location to use | default : `Dulles:Chrome`
+
+Budget:
+
+- `--visualComplete` | default : `""`
+- `--render` | default : `"1000"`
+- `--loadTime` | default : `""`
+- `--docTime` | default : `""`
+- `--fullyLoaded` | default : `""`
+- `--bytesIn` | default : `""`
+- `--bytesInDoc` | default : `""`
+- `--requests` | default : `""`
+- `--requestsDoc` | default : `""`
+- `--SpeedIndex` | default : `"1000"`
+
+### Node module
+
+```
+var perfbudget = require('perfbudget');
+
+perfbudget.runTest(options, function(err, result) {
+  if (err) {
+    return console.log(err);
+  }
+
+  if (!result.pass) {
+    console.log(
+      '\n-----------------------------------------------' +
+      '\nTest for ' + result.options.url + ' \t ' + colors.red('[FAILED]') +
+      '\n-----------------------------------------------\n'
+    );
+    console.log(result.msg);
+    console.log('Summary: ' + result.summary);
+  } else {
+    console.log(
+      '\n-----------------------------------------------' +
+      '\nTest for ' + result.options.url + ' \t ' + colors.green('[PASSED]') +
+      '\n-----------------------------------------------\n'
+    );
+    console.log(result.msg);
+    console.log('Summary: ' + result.summary);
+  }
+});
+```
+
 
 ## TODO
 
