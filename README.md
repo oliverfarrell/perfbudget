@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/oliverfarrell/perfbudget.svg?branch=master)](https://travis-ci.org/oliverfarrell/perfbudget) [![Code Climate](https://codeclimate.com/github/oliverfarrell/perfbudget/badges/gpa.svg)](https://codeclimate.com/github/oliverfarrell/perfbudget) [![Dependency Status](https://david-dm.org/oliverfarrell/perfbudget.svg)](https://david-dm.org/oliverfarrell/perfbudget)
 
-# Performance budgeting
+## Performance budgeting
 perfbudget is a stand-alone version of Tim Kadlec's ([@tkadlec](http://twitter.com/tkadlec)) [grunt-perfbudget](https://github.com/tkadlec/grunt-perfbudget) plugin. It is a node package for enforcing a performance budget. It uses [webpagetest.org](http://webpagetest.org/) and the [WebPagetest API Wrapper for NodeJS](https://github.com/marcelduran/webpagetest-api) created by [Marcel Duran](https://github.com/marcelduran).
 
 perfbudget uses either a public or private instance of WebPagetest to perform tests on a specified URL. It compares test results to budgets you specify. If the budget is met, the tasks successfully completes. If the page exceeds your performance budgets, the task fails and informs you why.
