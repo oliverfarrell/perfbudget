@@ -1,6 +1,6 @@
 # perfbudget
 
-[![Build Status](https://travis-ci.org/oliverfarrell/perfbudget.svg?branch=master)](https://travis-ci.org/oliverfarrell/perfbudget)
+[![Build Status](https://travis-ci.org/oliverfarrell/perfbudget.svg?branch=master)](https://travis-ci.org/oliverfarrell/perfbudget) [![Code Climate](https://codeclimate.com/github/oliverfarrell/perfbudget/badges/gpa.svg)](https://codeclimate.com/github/oliverfarrell/perfbudget)
 
 A stand-alone version of Tim Kadlec's ([@tkadlec](http://twitter.com/tkadlec)) [grunt-perfbudget](https://github.com/tkadlec/grunt-perfbudget) plugin.
 
